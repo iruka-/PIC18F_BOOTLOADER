@@ -1,0 +1,18 @@
+Module Module1
+
+    Declare Function UsbInit Lib "hidmon.dll" (ByVal device As String) As Integer
+    Declare Function UsbExit Lib "hidmon.dll" () As Integer
+    Declare Function UsbPeek Lib "hidmon.dll" (ByVal address As Integer, ByVal arena As Integer) As Integer
+    Declare Function UsbPoke Lib "hidmon.dll" (ByVal address As Integer, ByVal arena As Integer, ByVal data As Integer, ByVal mask As Integer) As Integer
+    Declare Function PortAddress Lib "hidmon.dll" (ByVal portname As String) As Integer
+
+    Sub Main()
+        FileOpen(1, "log.txt", OpenMode.Output)
+        UsbInit("*")
+        Print(1, PortAddress("pinb"))
+        Print(1, UsbPeek(PortAddress("pinb"), 0))
+        UsbExit()
+        FileClose(1)
+    End Sub
+
+End Module

@@ -1,0 +1,13 @@
+# 
+# ubuntuでの使い方:
+#  このファイルを  '/etc/udev/rules.d/' にコピーした後、
+#  $ sudo /etc/init.d/udev restart
+#
+
+# HIDaspx (HID mode)
+SUBSYSTEM=="usb",SYSFS{idVendor}=="16c0",SYSFS{idProduct}=="05df",MODE="0666"
+
+# PIC18spx (HID mode)
+SUBSYSTEM=="usb",SYSFS{idVendor}=="04d8",SYSFS{idProduct}=="003c",MODE="0666"
+
+#

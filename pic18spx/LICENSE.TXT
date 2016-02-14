@@ -1,0 +1,129 @@
+LICENSE.TXT
+---------------------------------------------
+ソースライセンスは３種類含まれます。
+
+
+・ソースツリー
+├─firmware	… PICspxファームウェア
+│    └─ usb  … MICROCHIP製 USBフレームワークソース
+│
+│            以下３つはＧＰＬ
+├─picmon      … PICmon 簡易モニタ (gputils逆アセンブラを含む)
+├─picwriter   … PIC18Fライターソフト
+├─writer24    … PIC24Fライターソフト
+│
+└─picspx		… hidspx派生のソース(MinGW, Borland C++兼用)… BSDライセンス
+    └─libusb	… libusbライブラリは(L)GPLになっています。
+        ├─bin
+        ├─examples
+        ├─include
+        └─lib
+            ├─bcc
+            ├─dynamic
+            ├─gcc
+            ├─msvc
+            └─msvc_x64
+
+
+
+（１）PIC18FのUSBフレームワークのソースはMICROCHIPが権利を保有しています。
+
+├─firmware	… PICspxファームウェア
+      └─ usb  … MICROCHIP製 USBフレームワークソース
+
+	USBフレームワーク  ソースには以下のようなコピーライト条文が含まれます。
+
+ * Company:         Microchip Technology, Inc.
+ *
+ * Software License Agreement
+ *
+ * The software supplied herewith by Microchip Technology Incorporated
+ * (the 'Company') for its PICmicro(TM) Microcontroller is intended and
+ * supplied to you, the Company's customer, for use solely and
+ * exclusively on Microchip PICmicro Microcontroller products. The
+ * software is owned by the Company and/or its supplier, and is
+ * protected under applicable copyright laws. All rights are reserved.
+ * Any use in violation of the foregoing restrictions may subject the
+ * user to criminal sanctions under applicable laws, as well as to
+ * civil liability for the breach of the terms and conditions of this
+ * license.
+ *
+ * THIS SOFTWARE IS PROVIDED IN AN 'AS IS' CONDITION. NO WARRANTIES,
+ * WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
+ * TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
+ * IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
+ * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+ *
+ * Author               Date        Comment
+ *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Rawin Rojvanit       11/19/04    Original.
+ ********************************************************************/
+
+
+
+------------------------------------------------------------------------------------
+
+（２）hidspxをもとにしたAVRライターソフト(ディレクトリpicspx以下)は
+　　　基本的にBSDライセンスを採用しています。
+
+├─picspx		… hidspx派生のソース(MinGW, Borland C++兼用)… BSDライセンス
+    └─libusb	… libusbライブラリは(L)GPLになっています。
+        ├─bin
+        ├─examples
+        ├─include
+        └─lib
+            ├─bcc
+            ├─dynamic
+            ├─gcc
+            ├─msvc
+            └─msvc_x64
+
+  picspx は hidspx をPIC側ターゲットに合うように移植しただけのものです。
+  libusb が使用されていますが、これはhidspxがそのオリジナルであるavrspxの上位互換性
+  を保つために（USBaspなどをサポートするために）使用しているもので、PICデバイスとの
+  接続には使用していません。
+
+
+  オリジナル版(AVR版)は以下のURLをご参照ください。
+  http://www-ice.yamagata-cit.ac.jp/ken/senshu/sitedev/index.php?AVR%2FHIDaspx00
+
+
+謝辞
+  hidspxメンテナンスなどをされているsenshuさん、オリジナルhidasp作者の瓶詰堂さん、
+  avrspx avrsp 作者様の方々に この場を借りて、感謝いたします。
+
+
+参考
+
+*1 hidspx の元になっている avrspx や avrsp は、BSD ライセンスを採用しており、その
+派生ソフト hidspx も同様です。BSD ライセンスとはオープンソースソフトウェアで使用
+されているライセンス体系のひとつです。無保証・免責を宣言し、再配布する際に著作権
+表示を行なうことのみを条件とする、極めて制限の緩いライセンスです。詳細は以下の URL
+を参照してください。
+
+  http://ja.wikipedia.org/wiki/BSD%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9
+
+
+------------------------------------------------------------------------------------
+
+（３） （１）と（２）以外の部分はＧＰＬ扱いになります。
+
+├─picmon      … PICmon 簡易モニタ (gputils逆アセンブラを含む)
+├─picwriter   … PIC18Fライターソフト
+├─writer24    … PIC24Fライターソフト
+
+    hostPC側ソースのうち、PIC18の逆アセンブラモジュールは、
+    gputils (GPU PIC utils) を使用させて頂きました。
+
+picmon/gpdis.c:2:      Copyright (C) 2001, 2002, 2003, 2004, 2005
+picmon/libgputils.h:2: Copyright (C) 2001, 2002, 2003, 2004, 2005
+picmon/gpdis.h:2:      Copyright (C) 2001, 2002, 2003, 2004, 2005
+picmon/gpopcode.c:2:   Copyright (C) 2001, 2002, 2003, 2004, 2005
+picmon/gpopcode.h:2:   Copyright (C) 2001, 2002, 2003, 2004, 2005
+
+    これらのソースも含めて、（１）（２）以外のソースに関してはGPL v3 扱いになります。
+
+
+GNU GENERAL PUBLIC LICENSE に関しては、 COPYING.TXT を見てください. 
+

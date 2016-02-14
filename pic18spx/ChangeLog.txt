@@ -1,0 +1,71 @@
+   -------------------------------------------------------------------------
+
+■ 変更履歴
+
+2010-0415:  千秋の修正
+            ・picmon.exe, picboot.exe をBorlandC++ コンパイラ用の Makefile.bcc
+              を追加し、gcc, bcc32の両方でコンパイル可能な修正を行った。
+            ・picspx-gcc.exe ATtiny84のサポートを追加
+
+2010-0413:  千秋の修正
+            ・picspx-gcc.exe の認識できない時のリトライ機能を追加。
+            ・picmon.exe のdコマンドでASCII文字表示を有効にした。
+            ・各種コマンドのエラー表示の見直し。
+            ・picspx-gcc.exe にATtiny84のサポートを追加。
+
+ 2010-0410: 千秋さんの修正分を反映.
+            HIDRxReport64() 関数の致命的なBug修正.
+            UsbSyncCmd() が正常に動作していない問題修正.
+            14K50のanalogが正しく動作していない問題修正.
+            14K50のメモリーマップ見直し
+
+■ pic18spxファームウェアのシリアル番号をEEPROMで設定できます。
+   この変更を行わない場合の初期値は"0001"です。
+
+----  EEPROM MAP ----
+
+	0x00（ユーザ領域）
+	　:
+	0xef（ユーザ領域）
+
+	0xf0 シリアル番号の総文字数（現段階では、4に限定）
+	0xf1 シリアル番号（1文字目）
+	0xf2 シリアル番号（2文字目）
+	0xf3 シリアル番号（3文字目）
+	0xf4 シリアル番号（4文字目）
+	0xf5 シリアル番号（5文字目）
+	0xf6 シリアル番号（6文字目）
+	0xf7 予備
+	 :
+	0xfc 予備
+	0xfd USBシリアルの初期化ボーレート
+	0xfe DTR/RTSなどの有効・無効の指定など
+	0xff JUMPアドレス(H) .... アプリの上位8ビット指定
+	※下位は 0x00を想定
+
+シリアル番号"ABCD"を設定する場合には、以下のように操作します。
+> picmon.exe
+TARGET DEV_ID=14 VER=1.1(Bootloader)
+PIC> dr f0 f7  ... 初期値は 0xffです
+0000f0 ff ff ff ff ff ff ff ff  ........
+PIC> er f0 4
+PIC> er f1 41 ... "A"
+PIC> er f2 42 ... "B"
+PIC> er f3 43 ... "C"
+PIC> er f4 44 ... "D"
+PIC> dr f0 f7  ... 設定値の確認
+0000f0 04 41 42 43 44 ff ff ff  .ABCD...
+
+■ 設定した値は pic18spxファームの実行時に反映されます。
+   picmon.exe のbootコマンド、あるいはpic18spxのRESETで確認します。
+
+>picspx -ph?
+VID=04d8, PID=003c, [AVRetc], [PIC18spx], serial=[ABCD] (*)
+
+
+
+ 2010-0406: reboot機能の修正
+            picmon モジュールの共通化( pic18boot/picmon/ )
+            ファームウェア修正
+            ・usercmd.c  を有効にした.
+

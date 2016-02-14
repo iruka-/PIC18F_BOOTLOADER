@@ -1,0 +1,108 @@
+#################################################################
+#	Windows用です.
+#
+#	コンパイラは minGw gccを使用します。
+#	試してはいませんがcygwinでも大丈夫なはずです。
+#	DEBUGの時には、-gをつけ、-sを外します。
+#################################################################
+
+EXE_SUFFIX = .exe
+USBLIBS =  ../picspx/libusb/lib/bcc/libusb.lib
+
+CC = bcc32
+O = .obj
+RC = brc32
+#RC = windres
+USBFLAGS = -DHIDMON=1
+#CFLAGS	= $(USBFLAGS) -O2 -P
+CFLAGS	= $(USBFLAGS) -O2
+#CFLAGS	= $(USBFLAGS) -g -O2 -Wall
+LIBS	= $(USBLIBS)
+#WIN32LIB= -lkernel32 -luser32 -lgdi32
+
+TARG1 = picmon
+TARG2 = picboot
+
+#################################################################
+OBJS1 = monit$(O) analog$(O) util$(O) hidasp$(O) gr$(O) portlist$(O) gpopcode$(O) gpdis$(O) infra$(O)
+OBJS2 = picboot$(O) util$(O) hidasp$(O)
+
+PROGRAM1 = $(TARG1)$(EXE_SUFFIX)
+PROGRAM2 = $(TARG2)$(EXE_SUFFIX)
+
+#################################################################
+all: $(PROGRAM1) $(PROGRAM2)
+
+.c$(O):
+	$(CC) $(CFLAGS) -c $<
+
+#icon$(O):	icon.rc
+#	$(RC) -i icon.rc -o icon$(O)
+
+#################################################################
+# Debug時は -s を指定しない
+$(PROGRAM1): $(OBJS1)
+#	$(CC) -o $(PROGRAM1) $(OBJS1) $(WIN32LIB) -lsetupapi $(LIBS)
+	$(CC) -e$(PROGRAM1) $(OBJS1) $(LIBS)
+	$(RC) icon.rc $(PROGRAM1)$(EXE)
+
+$(PROGRAM2): $(OBJS2)
+#	$(CC) -o $(PROGRAM2) $(OBJS2) $(WIN32LIB) -lsetupapi $(LIBS)
+	$(CC) -e$(PROGRAM2) $(OBJS2) $(WIN32LIB) -lsetupapi $(LIBS)
+	$(RC) icon.rc $(PROGRAM2)$(EXE)
+
+#################################################################
+test:
+	$(PROGRAM2) ../src/bootloader.hex
+
+#################################################################
+test-reset:
+	$(PROGRAM2) -r ../src/bootloader.hex
+
+#################################################################
+selfupdate:
+	$(PROGRAM2) -B ../src/bootloader.hex
+
+
+#################################################################
+clean:
+	rm -f *$(O) *.tds *.RES
+
+cleanall:
+	rm -f *$(O) *.tds *.RES $(PROGRAM1) $(PROGRAM2)
+
+#install:
+#	install -c $(PROGRAM1) ../bin
+#
+#################################################################
+###
+analog$(O): analog.c gr.h analog.h
+	$(CC) $(CFLAGS) -c analog.c
+
+gpdis$(O): gpdis.c gpdis.h gpopcode.h portlist.h
+	$(CC) $(CFLAGS) -c gpdis.c
+
+gpopcode$(O): gpopcode.c gpopcode.h
+	$(CC) $(CFLAGS) -c gpopcode.c
+
+gr$(O): gr.c gr.h
+	$(CC) $(CFLAGS) -c gr.c
+
+hidasp$(O): hidasp.c usbhid.h hidasp.h avrspx.h ../firmware/hidcmd.h monit.h
+	$(CC) $(CFLAGS) -c hidasp.c
+
+infra$(O): infra.c monit.h ../firmware/hidcmd.h hidasp.h util.h
+	$(CC) $(CFLAGS) -c infra.c
+
+monit$(O): monit.c monit.h ../firmware/hidcmd.h hidasp.h util.h gr.h analog.h portlist.h
+	$(CC) $(CFLAGS) -c monit.c
+
+picboot$(O): picboot.c monit.h ../firmware/hidcmd.h hidasp.h util.h
+	$(CC) $(CFLAGS) -c picboot.c
+
+portlist$(O): portlist.c monit.h ../firmware/hidcmd.h hidasp.h portlist.h util.h \
+portlist_2313.h portlist_mega88.h portlist_pic18.h portlist_14k50.h
+	$(CC) $(CFLAGS) -c portlist.c
+
+util$(O): util.c hidasp.h monit.h ../firmware/hidcmd.h portlist.h util.h
+	$(CC) $(CFLAGS) -c util.c

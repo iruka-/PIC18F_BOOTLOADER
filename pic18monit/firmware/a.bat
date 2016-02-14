@@ -1,0 +1,2 @@
+cd ..\picmonit
+picmonit.exe

@@ -1,0 +1,13 @@
+Option Explicit
+Private Declare Function UsbInit Lib "hidmon.dll" (ByVal device As String) As Long
+Private Declare Function UsbExit Lib "hidmon.dll" () As Long
+Private Declare Function UsbPeek Lib "hidmon.dll" (ByVal address As Long, ByVal arena As Long) As Long
+Private Declare Function UsbPoke Lib "hidmon.dll" (ByVal address As Long, ByVal arena As Long, ByVal data As Long, ByVal mask As Long) As Long
+Private Declare Function PortAddress Lib "hidmon.dll" (ByVal portname As String) As Long
+Sub main()
+    UsbInit ("*")
+    MsgBox (PortAddress("pinb"))
+    MsgBox (UsbPeek(PortAddress("pinb"), 0))
+    UsbExit
+End Sub
+

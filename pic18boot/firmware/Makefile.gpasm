@@ -1,0 +1,72 @@
+# ==========================================================
+#	Makefile for HIDboot
+# ==========================================================
+#
+#	注意:
+#		gpasm は dw 擬似命令の処理に問題があるため、
+#		出来たバイナリーを焼いても正しく動作しません。
+#
+#		将来のバージョンに期待するか、gpasmの修正を望みます。
+#
+#
+
+PROJECT		= bootloader
+PROCESSOR	= 18f2550
+
+
+# ==========================================================
+#	bootload の常駐番地
+# ==========================================================
+#   本番設定=0000
+#   他のloaderを使用してデバッグ=0800
+
+#VECTOR=0000
+VECTOR=0800
+#VECTOR=1000
+
+
+
+SRCS		= boot.asm usb.asm usb_desc.asm vectors.asm flash.asm hidmon.asm
+INCS		= boot_if.inc boot.inc io_cfg.inc usb_defs.inc usb_desc.inc usb.inc P18F4455.INC
+OBJS		= $(foreach f, $(SRCS), $(basename $(f)).o )
+
+COF			= $(PROJECT).cof
+HEX			= $(PROJECT).hex
+MAP			= $(PROJECT).map
+
+#MPLAB_DIR	= "C:\Program Files\Microchip\MPASM Suite\"
+ASM			= gpasm.exe
+LINK		= gplink.exe
+MP2HEX		= mp2hex.exe
+#LKR			= sd18f2550.lkr
+LKR			= sd18f2550-$(VECTOR).lkr
+
+ASMFLAGS	=
+
+all: $(HEX)
+
+$(HEX): $(OBJS)
+	$(LINK) -q $(LKR) $(OBJS) -m -o$@
+
+%.o: %.asm $(INCS)
+#	$(ASM) /q /p$(PROCESSOR) /dVECT=0x$(VECTOR) $< /e /l /y /o$@ $(ASMFLAGS)
+	$(ASM) -q -p$(PROCESSOR) -DVECT=0x$(VECTOR) $< -c -y -o$@ $(ASMFLAGS)
+
+clean:
+	rm -f *.o *.ERR *.LST *.map *.cod *.cof *.hex
+
+print:
+	@echo "SRCS = $(SRCS)"
+	@echo "INCS = $(INCS)"
+	@echo "OBJS = $(OBJS)"
+
+dis:
+	gpdasm -y -p 18f2550 $(PROJECT).hex >1
+	-tabconv -d8 1 2
+#	 $(PROJECT).dis
+
+dump:
+	srec2bin $(PROJECT).hex 1 >2
+
+.PHONY: all clean print
+#

@@ -1,0 +1,20 @@
+REM  *****  BASIC  *****
+
+' ----------------------------------------------------------------------
+'	hidmon.dll
+'
+Declare Function UsbInit		    Lib "hidmon.dll" (ByVal device as string) as long
+Declare Function UsbExit		    Lib "hidmon.dll" () as long
+Declare Function UsbPeek		Lib "hidmon.dll" (ByVal address as long,ByVal arena as long) as long
+Declare Function UsbPoke		Lib "hidmon.dll" (ByVal address as long,ByVal arena as long,ByVal data as long,ByVal mask as long) as long
+Declare Function PortAddress	Lib "hidmon.dll" (ByVal portname as string) as long
+
+
+
+Sub Main
+	UsbInit("*")
+	print PortAddress("pinb")
+	print UsbPeek(PortAddress("pinb"),0)
+	UsbExit()
+End Sub
+
